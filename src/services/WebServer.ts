@@ -21,8 +21,12 @@ export default class WebServer {
         this.app.listen(80);
     }
 
+    /**
+     * Binnen deze functie worden alle controllers(routes) aan de Express app toegevoegd.
+     */
     SetupControllers = () => {
 
+        // De route die de website served
         this.app.use("/", WebsiteController.router);
     };
 
