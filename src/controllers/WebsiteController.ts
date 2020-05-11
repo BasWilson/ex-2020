@@ -15,7 +15,7 @@ class WebsiteController implements IController {
     setup = () => {
         this.service = new WebsiteService();
 
-        this.router.get('/', this.service.SPA);
+        this.router.get('*', this.service.SPA);
     }
 }
 
