@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2016",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "moduleResolution": "node",
+        "jsx": "react",
+        "jsxFactory": "h",
+        "sourceMap": true,
+        "outDir": "build",
+        "baseUrl": ".",
+        "allowJs": true,
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        }
+    },
+    "exclude": [
+        "src/client/dev-dist/**/*"
+    ],
+    "include": [
+        "src/**/*",
+    ]
+}
