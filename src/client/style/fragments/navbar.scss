@@ -1,0 +1,12 @@
+nav {
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: $prim;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
