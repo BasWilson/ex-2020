@@ -3,3 +3,4 @@
 /src/client/dev-dist
 /.cache
 config.json
+*.key

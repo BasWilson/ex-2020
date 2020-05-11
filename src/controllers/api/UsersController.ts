@@ -15,7 +15,11 @@ class UsersController implements IController {
     setup = () => {
         this.service = new UsersService();
 
-        this.router.get('/', this.service.users);
+        // Handeld het creeeren van een user
+        this.router.post('/create', this.service.Create);
+
+        // Handeld het inloggen van een user
+        this.router.post('/login', this.service.LogIn);
     }
 }
 

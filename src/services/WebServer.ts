@@ -1,7 +1,9 @@
 import * as Express from "express";
+import * as session from "express-session";
 import * as path from "path";
 import * as mongoose from "mongoose";
 import * as config from "../../config.json";
+import bodyParser = require("body-parser");
 import WebsiteController from "../controllers/WebsiteController";
 import UsersController from "../controllers/api/UsersController";
 
@@ -13,6 +15,15 @@ export default class WebServer {
 
         // Maak een nieuwe express app
         this.app = Express();
+
+        // Voeg benodigde middleware toe
+        this.app.use(bodyParser());
+        this.app.use(session({
+            secret: config.sessionSecret,
+            resave: false,
+            saveUninitialized: true,
+            cookie: { secure: true }
+          }))
 
         // Maak de client files beschikbaar binnen de http-server
         this.app.use('/', Express.static(path.join(__dirname, '../client/dev-dist')));
