@@ -7,6 +7,7 @@ import PoolCountryPicker from "../components/PoolCountryPicker";
 import PoolAdminControls from "../components/PoolAdminControls";
 import GlobalCallbacks from "../services/GlobalCallbacks";
 import PoolBracket from "../components/PoolBracket";
+import { CalculatePointsPerUser } from "../helpers/Scoring";
 
 export default class PoolsRoute extends Component {
 
@@ -36,6 +37,7 @@ export default class PoolsRoute extends Component {
             // Haal de pool op
             const pool = await PoolService.GetPool(poolId);
 
+
             // Als de poule bestaat, haal alle users uit die pool op
             if (pool) {
                 const usersInPool = [];
@@ -55,10 +57,6 @@ export default class PoolsRoute extends Component {
             }
 
         }
-    }
-
-    SubmitPoolUpdate = () => {
-
     }
 
     ValueChanged = (input: string, val: string) => {
@@ -83,16 +81,17 @@ export default class PoolsRoute extends Component {
             } else {
 
                 if (this.state.finalized) {
+                    const score = CalculatePointsPerUser(this.state.pool!);
                     return (
                         <div className={"content container container--h"}>
                             <PoolUsersList profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
-                            <PoolBracket />
+                            <PoolBracket score={score} users={this.state.usersInPool} />
                         </div>
                     )
                 } else {
                     return (
                         <div className={"content container container--h"}>
-                            <PoolAdminControls pool={this.state.pool!} finishedCallback={() => {this.setState({pickedCountries: true})}} />
+                            <PoolAdminControls pool={this.state.pool!} finishedCallback={this.RefreshPoolAndUsers} />
                             <PoolUsersList profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
                         </div>
                     )

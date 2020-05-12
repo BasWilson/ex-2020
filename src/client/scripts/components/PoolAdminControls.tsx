@@ -51,13 +51,16 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
                                         if (copyOfCountries.length == 4) {
 
                                             console.log(copyOfCountries);
-                                            
+                                            // Haal meest recente op
+                                            const oldPool: IPoolModel = this.props.pool!;
+                                            const pool = await PoolService.GetPool(oldPool.poolId);
 
-                                            // Sla op in DB
-                                            const pool: IPoolModel = this.props.pool!;
+                                            if (!pool) return;
 
                                             // Stel de score in
-                                            pool.topFourCountries = copyOfCountries;
+                                            pool.topFourCountries = copyOfCountries.reverse();
+
+                                            console.log(pool);
 
                                             // Vraag om te updaten
                                             await PoolService.UpdatePool(pool);
