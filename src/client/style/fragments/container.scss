@@ -1,7 +1,10 @@
 .container {
-    background: $prim;
     display: flex;
     flex-direction: column;
     padding: 20px;
-    width: 350px;
+
+    &--h {
+        flex-direction: row;
+    }
 }
+

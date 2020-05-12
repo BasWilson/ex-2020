@@ -6,7 +6,7 @@ class PoolService {
 
     public CreatePool = async (name: string, userIds: string[]):Promise<any> => {
         try {
-            const authRes = await Axios.post(endpoints.poolCreate, {
+            const authRes = await Axios.post(endpoints.pools, {
                 name: name,
                 userIds: userIds
             });
@@ -19,7 +19,7 @@ class PoolService {
 
     public GetAllPools = async ():Promise<IPoolModel[]> => {
         try {
-            const res = await Axios.get(endpoints.getPool);
+            const res = await Axios.get(endpoints.pools);
             return res.data;
         } catch (error) {
             return [];
@@ -28,7 +28,16 @@ class PoolService {
 
     public GetPool = async (poolId: string):Promise<IPoolModel | null> => {
         try {
-            const res = await Axios.get(endpoints.getPool + "/" + poolId);
+            const res = await Axios.get(endpoints.pools + "/" + poolId);
+            return res.data;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    public UpdatePool = async (pool: IPoolModel):Promise<IPoolModel | null> => {
+        try {
+            const res = await Axios.put(endpoints.pools, {pool: pool});
             return res.data;
         } catch (error) {
             return null;

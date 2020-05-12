@@ -6,7 +6,7 @@ import { PrivateProfile, GenerateJWT, ComparePassword, DecodeJWT, PublicProfile 
 import IReq from "../../interfaces/user/IReq";
 
 export default class UsersService {
-    
+
     /**
      * Valideert input en creeert een gebruiker.
      */
@@ -24,7 +24,7 @@ export default class UsersService {
             }
 
             // Data is er. Strip data van harmfull stuff
-            let {username, password} = req.body;
+            let { username, password } = req.body;
 
             // Strip HTML tags uit de username en haal whitespace weg
             username = striptags(username).trim();
@@ -51,7 +51,7 @@ export default class UsersService {
 
             // Genereer een JsonWebToken voor toekomstige authenticatie
             req.cookies.token = GenerateJWT(savedUser);
-            
+
             // Maak van het opgeslagen profiel een private profile en stuur naar de gebruiker
             res.send(PrivateProfile(savedUser));
 
@@ -94,7 +94,7 @@ export default class UsersService {
             }
 
             // Data is er. Strip data van harmfull stuff
-            let {username, password} = req.body;
+            let { username, password } = req.body;
 
             // Strip HTML tags uit de username en haal whitespace weg
             username = striptags(username).trim();
@@ -150,18 +150,33 @@ export default class UsersService {
         }
     }
 
-    public GetAllUsers = async (req: IReq, res: Express.Response) => {
+    public GetUser = async (req: IReq, res: Express.Response) => {
 
         try {
-            // haal alle users op en maak publieke profielen ervan
-            const users: IUserModel[] = await UserModel.find({});
-            const publicUsers = [];
 
-            for (let i = 0; i < users.length; i++) {
-                publicUsers.push(PublicProfile(users[i]));    
+            // Check of er een id meegegeven is
+            if (req.params.userId) {
+                const user: IUserModel | null = await UserModel.findOne({ userId: req.params.userId });
+
+                if (user) {
+                    res.send(PublicProfile(user));
+                } else {
+                    res.sendStatus(404);
+                }
+            } else {
+
+
+                // haal alle users op en maak publieke profielen ervan
+                const users: IUserModel[] = await UserModel.find({});
+                const publicUsers = [];
+
+                for (let i = 0; i < users.length; i++) {
+                    publicUsers.push(PublicProfile(users[i]));
+                }
+                res.send(publicUsers);
             }
 
-            res.send(publicUsers);
+
         } catch (error) {
             console.log(error);
             res.send([]);

@@ -18,10 +18,13 @@ class PoolController implements IController {
         this.service = new PoolService();
 
         // Handeld het creeren van een pool, checkt ook voor admin level.
-        this.router.post('/create', AdminCheck(), this.service.Create);
+        this.router.post('/', AdminCheck(), this.service.Create);
 
         // Haal een of alle poules op
         this.router.get('/:poolId?', LoggedInCheck(), this.service.GetPool);
+
+        // Update een pool
+        this.router.put('/', AdminCheck(), this.service.Update);
     }
 }
 

@@ -3,6 +3,7 @@ import * as striptags from "striptags";
 import IReq from "../../interfaces/user/IReq";
 import IPoolModel from "../../interfaces/pool/IPoolModel";
 import PoolModel from "../../dbModels/PoolModel";
+import { IsAPool } from "../../helpers/PoolHelpers";
 
 export default class PoolService {
     
@@ -76,6 +77,20 @@ export default class PoolService {
 
         try {
 
+            // Check of het een pool object is en zorg dan dat ook alleen de data voor een pool achterblijft
+            const pool: IPoolModel | null = IsAPool(req.body.pool);
+
+            if (!pool) {
+                return res.sendStatus(401);
+            }
+
+            // Update met nieuwe pool
+            const updated = await PoolModel.findOneAndUpdate({poolId: pool.poolId}, pool, {new: true});
+
+            // Verstuur de nieuwe pool
+            if (updated) {
+                return res.send(updated);
+            }
 
         } catch (error) {
             console.log("Error tijdens het maken van account", error);

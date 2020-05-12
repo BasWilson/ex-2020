@@ -16,3 +16,22 @@
         color: black;
     }
 }
+
+
+.pool-users {
+    width: 100%;
+    
+    div {
+        width: 200px;
+        background-color: rgba(255, 255, 255, 0.795);
+        text-align: left;
+        padding: 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    span {
+        color: black;
+    }
+}

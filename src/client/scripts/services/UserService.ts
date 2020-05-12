@@ -6,7 +6,7 @@ class UsersService {
 
     public GetAllUsers = async ():Promise<IUserModel[]> => {
         try {
-            const res = await Axios.get(endpoints.allUsers);
+            const res = await Axios.get(endpoints.users);
             return res.data;
         } catch (users) {
             return [];
@@ -22,6 +22,15 @@ class UsersService {
         }
 
         return null;
+    }
+
+    public GetUserById = async (userId: string):Promise<IUserModel | null> => {
+        try {
+            const res = await Axios.get(endpoints.users + "/" + userId);
+            return res.data;
+        } catch (users) {
+            return null;
+        }
     }
 }
 

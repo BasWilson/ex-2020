@@ -68,7 +68,7 @@ export default class APoolCreateRoute extends Component {
     render() {
         return (
             <div class={"content"}>
-                <div className={"container login"}>
+                <div className={"container login bg-primary"}>
                     <h2>Maak een nieuwe Poule</h2>
                     <TextField customClasses={"m-t-10"} type={"text"} placeholder={"Poule naam"} onEnter={this.SubmitPoolCreation} valueChanged={(val: string) => {this.ValueChanged("poolName", val)}} />
                     

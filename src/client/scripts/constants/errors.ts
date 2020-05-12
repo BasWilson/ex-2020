@@ -5,5 +5,6 @@ export default  <Dictionary<string>>{
     "unknownError": "Er is een onbekende fout opgetreden",
     "noUserFoundWithThisCombination": "Er is geen account bij ons bekend met deze login gegevens",
     "noPoolNameSupplied": "U heeft geen naam aan de Poule gegeven, vul een naam in en probeer het opnieuw",
-    "poolIdTaken": "Het poule id was al in gebruik, probeer het opnieuw"
+    "poolIdTaken": "Het poule id was al in gebruik, probeer het opnieuw",
+    "malformedData": "Verzonden data was niet compleet, probeer het opnieuw"
 }

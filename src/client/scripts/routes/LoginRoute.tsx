@@ -49,7 +49,7 @@ export default class LoginRoute extends Component {
     render() {
         return (
             <div className={"content"}>
-                <div className={"container login"}>
+                <div className={"container login bg-primary"}>
                     <h2>Login</h2>
                     <TextField customClasses={"m-t-10"} type={"text"} placeholder={"Gebruikersnaam"} onEnter={this.SubmitLogin} valueChanged={(val: string) => {this.ValueChanged("username", val)}} />
                     <TextField customClasses={"m-t-10"} type={"password"} placeholder={"Wachtwoord"} onEnter={this.SubmitLogin} valueChanged={(val: string) => {this.ValueChanged("password", val)}} />
