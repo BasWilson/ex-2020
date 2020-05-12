@@ -2,10 +2,10 @@ import * as Express from "express";
 import * as striptags from "striptags";
 import UserModel from "../../dbModels/UserModel";
 import IUserModel from "../../interfaces/user/IUserModel";
-import { PrivateProfile, GenerateJWT, ComparePassword, DecodeJWT } from "../../helpers/UserHelpers";
+import { PrivateProfile, GenerateJWT, ComparePassword } from "../../helpers/UserHelpers";
 import IReq from "../../interfaces/user/IReq";
 
-export default class UsersService {
+export default class PoolService {
     
     /**
      * Valideert input en creeert een gebruiker.
@@ -50,7 +50,7 @@ export default class UsersService {
             const savedUser = await UserModel.create(user);
 
             // Genereer een JsonWebToken voor toekomstige authenticatie
-            req.cookies.token = GenerateJWT(savedUser);
+            req.session.token = GenerateJWT(savedUser);
             
             // Maak van het opgeslagen profiel een private profile en stuur naar de gebruiker
             res.send(PrivateProfile(savedUser));
@@ -76,11 +76,10 @@ export default class UsersService {
         }
     }
 
-
     /**
-     * Valideert input en zoekt de bestaande gebruiker
+     * Valideert input en creeert een gebruiker.
      */
-    public LogIn = async (req: IReq, res: Express.Response) => {
+    public Update = async (req: IReq, res: Express.Response) => {
 
         try {
 
@@ -107,41 +106,37 @@ export default class UsersService {
                 });
             }
 
-            // Zoek de user
+            // Creeer de user
+            // Zoals je kan zien vullen we alleen zelf de username en ww in omdat de rest door mongo 
+            // voor ons wordt ingevuld d.m.v. default values.
+            // In de UserModel.ts wordt ook het password voor ons gehasht.
             const user = <IUserModel>{
-                username: username
+                username: username,
+                password: password
             };
 
             // Sla de user op in de database
-            const savedUser = await UserModel.findOne(user);
-
-            // Check if savedUser niet null is
-            if (!savedUser) {
-
-                return res.send({
-                    error: "noUserFoundWithThisCombination"
-                });
-            }
-
-            // Check if wachtwoord goed is
-            const passwordValid = await ComparePassword(password, savedUser.password);
-            if (!passwordValid) {
-
-                return res.send({
-                    error: "noUserFoundWithThisCombination"
-                });
-            }
-
-            console.log(DecodeJWT(req.cookies.token));
+            const savedUser = await UserModel.create(user);
 
             // Genereer een JsonWebToken voor toekomstige authenticatie
-            res.cookie("token", GenerateJWT(savedUser));
-
+            req.session.token = GenerateJWT(savedUser);
+            
             // Maak van het opgeslagen profiel een private profile en stuur naar de gebruiker
             res.send(PrivateProfile(savedUser));
 
         } catch (error) {
-            console.log("Error tijdens het inloggen op account", error);
+            console.log("Error tijdens het maken van account", error);
+
+            // Check of het een mongo error is
+            if (error.hasOwnProperty("code")) {
+
+                // Duplicate key error == username is al ingebruik
+                if (error.code == 11000) {
+                    return res.send({
+                        error: "usernameTaken"
+                    });
+                }
+            }
 
             // Niet known bij ons :)
             return res.send({
@@ -149,4 +144,5 @@ export default class UsersService {
             })
         }
     }
+
 }

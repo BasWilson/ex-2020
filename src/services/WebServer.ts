@@ -3,9 +3,12 @@ import * as session from "express-session";
 import * as path from "path";
 import * as mongoose from "mongoose";
 import * as config from "../../config.json";
+import * as moment from 'moment';
+var cookieParser = require('cookie-parser')
 import bodyParser = require("body-parser");
 import WebsiteController from "../controllers/WebsiteController";
 import UsersController from "../controllers/api/UsersController";
+import PoolsController from "../controllers/api/PoolsController";
 
 export default class WebServer {
 
@@ -18,11 +21,17 @@ export default class WebServer {
 
         // Voeg benodigde middleware toe
         this.app.use(bodyParser());
+        this.app.use(cookieParser());
         this.app.use(session({
             secret: config.sessionSecret,
             resave: false,
             saveUninitialized: true,
-            cookie: { secure: true }
+            cookie: {
+                expires: moment().add(1, 'w').toDate(),
+                httpOnly: true,
+                secure: false,
+                signed: true,
+            }
           }))
 
         // Maak de client files beschikbaar binnen de http-server
@@ -46,8 +55,9 @@ export default class WebServer {
         // Api router, alle api routes moeten onder deze route aangemaakt worden
         const api = Express.Router();
 
-        // De route die de website served
         api.use("/users", UsersController.router);
+
+        api.use("/pool", PoolsController.router);
 
         // Voeg de api toe
         this.app.use("/api", api);

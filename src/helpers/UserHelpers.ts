@@ -95,3 +95,7 @@ export function VerifyJWT(token: string) {
 
     console.log("\nJWT verification result: " + JSON.stringify(legit));
 }
+
+export function DecodeJWT(token: string) {
+    return jwt.decode(token, {complete: true});
+}

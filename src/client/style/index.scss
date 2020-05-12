@@ -1,8 +1,11 @@
 @import "./variables.scss";
+@import "./reusables.scss";
 @import "./fragments/navbar.scss";
 @import "./fragments/button.scss";
 @import "./fragments/content.scss";
 @import "./fragments/breadcrumbs.scss";
+@import "./fragments/login.scss";
+@import "./fragments/input.scss";
 
 * {
     margin: 0;
