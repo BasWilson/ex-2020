@@ -4,7 +4,11 @@ export default class LoginRoute extends Component {
 
     render() {
         return (
-            <p>Login</p>
+            <div className={"content"}>
+                <div className={"login"}>
+
+                </div>
+            </div>
         )
     }
 }
