@@ -43,6 +43,15 @@ class PoolService {
             return null;
         }
     }
+
+    public PickCountries = async (pickedCountries: string[], poolId: string) => {
+        try {
+            const res = await Axios.put(endpoints.poolsPickCountry, {countries: pickedCountries, poolId: poolId});
+            return res.data;
+        } catch (error) {
+            return null;
+        }
+    }
 }
 
 export default new PoolService();

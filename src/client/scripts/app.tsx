@@ -11,6 +11,7 @@ import AdminRoute from "./routes/AdminRoute";
 import APoolCreateRoute from "./routes/admin/APoolCreateRoute";
 import APoolsRoute from "./routes/admin/APoolsRoute";
 import PoolsRoute from "./routes/PoolsRoute";
+import MyPoolsRoute from "./routes/MyPoolsRoute";
 
 class App extends Component {
 
@@ -34,6 +35,7 @@ class App extends Component {
                     <APoolCreateRoute path="/admin/pool-create"/>
                     <APoolsRoute path="/admin/pools"/>
                     <PoolsRoute path="/pools/:poolId"/>
+                    <MyPoolsRoute path="/pools/"/>
                 </Router>
             </Fragment>
 

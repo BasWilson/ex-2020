@@ -4,6 +4,10 @@ import IReq from "../../interfaces/user/IReq";
 import IPoolModel from "../../interfaces/pool/IPoolModel";
 import PoolModel from "../../dbModels/PoolModel";
 import { IsAPool } from "../../helpers/PoolHelpers";
+import { DecodeJWT } from "../../helpers/UserHelpers";
+import IUserModel from "../../interfaces/user/IUserModel";
+import { isArray } from "util";
+import countries from "../../client/scripts/constants/countries";
 
 export default class PoolService {
     
@@ -93,18 +97,6 @@ export default class PoolService {
             }
 
         } catch (error) {
-            console.log("Error tijdens het maken van account", error);
-
-            // Check of het een mongo error is
-            if (error.hasOwnProperty("code")) {
-
-                // Duplicate key error == username is al ingebruik
-                if (error.code == 11000) {
-                    return res.send({
-                        error: "usernameTaken"
-                    });
-                }
-            }
 
             // Niet known bij ons :)
             return res.send({
@@ -126,11 +118,29 @@ export default class PoolService {
                     res.sendStatus(404);
                 }
             } else {
+                // Geen poolId meegegeven, geef gewoon alle pouls terug
+                
+                // Kijk of het de admin is. Dan pakken we alle poules anders alleen waar gebruiker deel van
+                // uit maakt.
+                const decodedJwt: any = DecodeJWT(req.cookies.token);
 
-                // Niks meegegeven, geef gewoon alle pouls terug
-                // haal alle poules op en verstuur ze
-                const pools: IPoolModel[] = await PoolModel.find({});
-                res.send(pools);
+                if (!decodedJwt) return res.sendStatus(403);
+
+                const user: IUserModel = decodedJwt.payload;
+                
+                console.log(user);
+                
+
+                // Admin
+                if (user.elevationLevel > 0) {
+                    // haal alle poules op en verstuur ze
+                    const pools: IPoolModel[] = await PoolModel.find({});
+                    return res.send(pools);
+                }
+
+                // Gebruiker
+                const pools: IPoolModel[] = await PoolModel.find({userIds: { $in: [ user.userId ] }});
+                return res.send(pools);
             }
 
         } catch (error) {
@@ -138,5 +148,70 @@ export default class PoolService {
             res.send([]);
         }
     };
+
+    /**
+     * Valideert input en creeert een gebruiker.
+     */
+    public PickCountries = async (req: IReq, res: Express.Response) => {
+
+        try {
+
+            if (!req.body.hasOwnProperty("countries") || !req.body.hasOwnProperty("poolId")) {
+                return res.send({error: "invaldCountries"});
+            }
+
+            // Check of het 4 landen zijn
+            if (!isArray(req.body.countries) || req.body.countries.length != 4) {
+                return res.send({error: "invaldCountries"});
+            }
+
+            // Check of de landen wel bestaan bij ons :0
+            req.body.countries.forEach((code: string) => {
+                if (!countries.find(c => c.code == code)) {
+                    return res.send({error: "invaldCountries"});
+                }
+            });
+
+            // validated :)
+
+            // haal user id uit de jwt
+            const decodedJwt: any = DecodeJWT(req.cookies.token);
+
+            if (!decodedJwt) return res.sendStatus(403);
+
+            const user: IUserModel = decodedJwt.payload;
+
+            // Vind the poule
+            const oldPool = await PoolModel.findOne({poolId: req.body.poolId, userIds: { $in: [ user.userId ] }});
+
+            if (!oldPool) {
+                return res.send({error: "invaldPoolId"});
+            }
+
+            // Kijk of niet al gekozen
+            if (oldPool.votesByUserId.find(vote => vote.userId == user.userId)) {
+                return res.send({error: "alreadyPicked"});
+            }
+
+            // Update the poule
+            oldPool.votesByUserId.push({
+                userId: user.userId,
+                votesInOrderByCountry: req.body.countries
+            })
+
+            // Sla veranderingen op
+            await oldPool.save();
+
+            // Verstuur de veranderde pool
+            return res.send(oldPool);
+
+        } catch (error) {
+
+            // Niet known bij ons :)
+            return res.send({
+                error: "unknownError"
+            })
+        }
+    }
 
 }

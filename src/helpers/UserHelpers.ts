@@ -62,8 +62,8 @@ export function GenerateJWT(user: IUserModel) {
     console.log(__dirname);
 
     const payload = {
-        username: user.userId,
-        userId: user.username,
+        username: user.username,
+        userId: user.userId,
         dateJoined: user.dateJoined,
         elevationLevel: user.elevationLevel
     };

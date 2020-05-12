@@ -5,6 +5,7 @@ export function IsAPool(pool: any):IPoolModel | null {
     !pool.hasOwnProperty("name") || 
     !pool.hasOwnProperty("userIds") ||
     !pool.hasOwnProperty("dateCreated") ||
+    !pool.hasOwnProperty("topFourCountries") ||
     !pool.hasOwnProperty("votesByUserId")
     ) {
         return null;
@@ -15,6 +16,7 @@ export function IsAPool(pool: any):IPoolModel | null {
         name: pool.name,
         userIds: pool.userIds,
         dateCreated: pool.dateCreated,
-        votesByUserId: pool.votesByUserId
+        votesByUserId: pool.votesByUserId,
+        topFourCountries: pool.topFourCountries
     }
 }

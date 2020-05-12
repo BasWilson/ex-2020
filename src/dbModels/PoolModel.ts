@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true, maxlength: 30, minlength: 3 },
     userIds: { type: Array, default: [] },
     votesByUserId: { type: Array, default: [] },
+    topFourCountries: { type: Array, default: [] },
     dateCreated: { type: Date, default: Date.now, required: true }
 });
 

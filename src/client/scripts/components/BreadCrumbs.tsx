@@ -4,6 +4,7 @@
 import {h, Component, render, Fragment} from "preact";
 import pages from "../constants/pages";
 import { Link } from "preact-router";
+import GlobalCallbacks from "../services/GlobalCallbacks";
 
 export interface IBreadCrumb {
     pages: [{name: string, url: string, customLogic?: Function}]
@@ -11,6 +12,23 @@ export interface IBreadCrumb {
 }
 
 export default class BreadCrumbs extends Component<{currentPage: string}>  {
+
+    state = {
+        override: null
+    }
+
+    componentDidMount = () => {
+        GlobalCallbacks.Register(this.OverrideBreadCrumbWithHTML, "OverrideBreadCrumbWithHTML");
+        GlobalCallbacks.Register(this.RemoveBreadCrumbOverride, "RemoveBreadCrumbOverride");
+    }
+
+    OverrideBreadCrumbWithHTML = (value: string) => {
+        this.setState({override: value});
+    }
+
+    RemoveBreadCrumbOverride = () => {
+        this.setState({override: null});
+    }
 
     render() {
         let breadcrumb : IBreadCrumb = pages["/"];

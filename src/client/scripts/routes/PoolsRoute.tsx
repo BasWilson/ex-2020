@@ -1,21 +1,20 @@
 import {h, Component, Fragment } from "preact";
 import IUserModel from "../../../interfaces/user/IUserModel";
 import UserService from "../services/UserService";
-import TextField from "../components/TextField";
 import PoolService from "../services/PoolService";
-import IPoolModel from "../../../interfaces/pool/IPoolModel";
-import errors from "../constants/errors";
+import PoolUsersList from "../components/PoolUsersList";
+import PoolCountryPicker from "../components/PoolCountryPicker";
+import PoolAdminControls from "../components/PoolAdminControls";
+import GlobalCallbacks from "../services/GlobalCallbacks";
+import PoolBracket from "../components/PoolBracket";
 
 export default class PoolsRoute extends Component {
 
     state = {
-        firstPlace: "",
-        secondPlace: "",
-        thirdPlace: "",
-        fourthPlace: "",
-        setScoreStage: -1,
         pool: null,
-        usersInPool: []
+        usersInPool: [],
+        pickedCountries: false,
+        finalized: false
     }
 
     componentWillMount = async () => {
@@ -23,23 +22,38 @@ export default class PoolsRoute extends Component {
     }
 
     RefreshPoolAndUsers = async () => {
-        // Vind het poolId
-        const poolId = location.href.split("/").reverse()[0];
 
-        // Haal de pool op
-        const pool = await PoolService.GetPool(poolId);
+        // Haal het profiel uit ls
+        const profile: IUserModel | null = UserService.GetLocalProfile();
 
-        // Als de poule bestaat, haal alle users uit die pool op
-        if (pool) {
-            const usersInPool = [];
+        if (profile) {
 
-            for (let i = 0; i < pool.userIds.length; i++) {
-                const user = await UserService.GetUserById(pool.userIds[i]);
-                if (user) usersInPool.push(user);
+            // Vind het poolId
+            const poolId = location.href.split("/").reverse()[0];
+
+            // GlobalCallbacks.Call("OverrideBreadCrumbWithString", "")
+
+            // Haal de pool op
+            const pool = await PoolService.GetPool(poolId);
+
+            // Als de poule bestaat, haal alle users uit die pool op
+            if (pool) {
+                const usersInPool = [];
+
+                for (let i = 0; i < pool.userIds.length; i++) {
+                    const user = await UserService.GetUserById(pool.userIds[i]);
+                    if (user) usersInPool.push(user);
+                }
+
+                // Check of user al landed gekozen heeft
+                const picked = pool.votesByUserId.find(vote => vote.userId == profile.userId);
+
+                const finalized =  pool.topFourCountries.length == 4;
+
+                // Update state :)
+                this.setState({pool: pool, usersInPool: usersInPool, pickedCountries: picked ? true : false, finalized: finalized});
             }
 
-            // Update state :)
-            this.setState({pool: pool, usersInPool: usersInPool});
         }
     }
 
@@ -47,100 +61,43 @@ export default class PoolsRoute extends Component {
 
     }
 
-    RemoveUserFromPool = async (userId: string) => {
-        // PoolService.UpdatePool(this.state.pool.poolId, props.userId, )
-
-        // Pak de array met users
-        const pool: IPoolModel = this.state.pool!;
-
-        // Verwijder de user uit de array
-        pool.userIds.splice(pool.userIds.findIndex(u => u == userId), 1);
-
-        // Verwijder ook uit votes by user
-        pool.votesByUserId.splice(pool.votesByUserId.findIndex(user => user.userId == userId), 1);
-
-        // Maak nu een update request naar de server
-        const updated = await PoolService.UpdatePool(pool);
-        
-        if (updated) {
-            await this.RefreshPoolAndUsers();
-        }
-
-    };
-
-
     ValueChanged = (input: string, val: string) => {
         this.setState({[input]: val});
     }
 
-    AdminControls = () => {
+    render() {
+
+        if (!this.state.pool) return null;
 
         // Haal het profiel uit ls
         const profile: IUserModel | null = UserService.GetLocalProfile();
 
         if (profile) {
-
-            if (profile.elevationLevel > 0) {
+            if (!this.state.pickedCountries) {
+            
                 return (
-                    <div className={"container bg-primary m-r-20"}>
-                        <h2>Stel de eindscore in</h2>
-                        <TextField customClasses={"m-t-10"} type={"text"} placeholder={"1e plek "} onEnter={this.SubmitPoolUpdate} valueChanged={(val: string) => {this.ValueChanged("firstPlace", val)}} />
-                        <TextField customClasses={"m-t-10"} type={"text"} placeholder={"2e plek"} onEnter={this.SubmitPoolUpdate} valueChanged={(val: string) => {this.ValueChanged("secondPlace", val)}} />
-                        <TextField customClasses={"m-t-10"} type={"text"} placeholder={"3e plek"} onEnter={this.SubmitPoolUpdate} valueChanged={(val: string) => {this.ValueChanged("thirdPlace", val)}} />
-                        <TextField customClasses={"m-t-10"} type={"text"} placeholder={"4e plek"} onEnter={this.SubmitPoolUpdate} valueChanged={(val: string) => {this.ValueChanged("fourthPlace", val)}} />
-                        <button className={"m-t-20 button"} onClick={this.SubmitPoolUpdate}>Stel scores in</button>
+                    <div className={"content container container--h"}>
+                        <PoolCountryPicker pool={this.state.pool!} finishedCallback={() => {this.setState({pickedCountries: true})}} />
                     </div>
                 )
+            } else {
+
+                if (this.state.finalized) {
+                    return (
+                        <div className={"content container container--h"}>
+                            <PoolUsersList profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
+                            <PoolBracket />
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div className={"content container container--h"}>
+                            <PoolAdminControls pool={this.state.pool!} finishedCallback={() => {this.setState({pickedCountries: true})}} />
+                            <PoolUsersList profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
+                        </div>
+                    )
+                }
             }
         }
-
-        return null;
-    }
-
-    DeleteButton = (props: {elevationLevel: number, userId: string}) => {
-        if (props.elevationLevel > 0) {
-            return <span className={"red"} onClick={() => {this.RemoveUserFromPool(props.userId)}}>X</span>
-        }
-
-        return null;
-    };
-
-    PoolControls = () => {
-
-        // Haal het profiel uit ls
-        const profile: IUserModel | null = UserService.GetLocalProfile();
-
-        if (profile) {
-            return (
-                <Fragment>
-                    <div className={"container bg-primary "}>
-                        <div className={"pool-users m-t-10"}>
-                            {
-                                this.state.usersInPool.map((user: IUserModel) => {
-                                    return (
-                                        <div onClick={() => {}}>
-                                            <span>{user.username}</span>
-                                            <span>0 punten</span>
-                                            <this.DeleteButton userId={user.userId} elevationLevel={profile.elevationLevel}/>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div>
-                </Fragment>
-            )
-        }
-
-        return null;
-    };
-
-    render() {
-        return (
-            <div className={"content container container--h"}>
-                <this.AdminControls />
-                <this.PoolControls />
-            </div>
-        )
     }
 }

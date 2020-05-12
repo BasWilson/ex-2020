@@ -17,6 +17,14 @@ export default {
             }
         ]
     },
+    "/pools": <IBreadCrumb><unknown>{
+        pages: [
+            {
+                name: "Mijn Poules",
+                url: "/pools"
+            }
+        ]
+    },
     "/admin": <IBreadCrumb><unknown>{
         pages: [
             {
