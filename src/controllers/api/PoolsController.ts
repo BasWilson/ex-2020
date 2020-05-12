@@ -2,6 +2,7 @@ import * as Express from "express";
 import IController from "../../interfaces/IController";
 import PoolService from "../../services/api/PoolService";
 import AdminCheck from "../../middleware/AdminCheck";
+import LoggedInCheck from "../../middleware/LoggedInCheck";
 
 class PoolController implements IController {
     router: Express.Router;    
@@ -19,8 +20,8 @@ class PoolController implements IController {
         // Handeld het creeren van een pool, checkt ook voor admin level.
         this.router.post('/create', AdminCheck(), this.service.Create);
 
-        // Haal alle poules op
-        this.router.get('/', AdminCheck(), this.service.GetAllPools);
+        // Haal een of alle poules op
+        this.router.get('/:poolId?', LoggedInCheck(), this.service.GetPool);
     }
 }
 

@@ -19,10 +19,19 @@ class PoolService {
 
     public GetAllPools = async ():Promise<IPoolModel[]> => {
         try {
-            const res = await Axios.get(endpoints.getAllPools);
+            const res = await Axios.get(endpoints.getPool);
             return res.data;
         } catch (error) {
             return [];
+        }
+    }
+
+    public GetPool = async (poolId: string):Promise<IPoolModel | null> => {
+        try {
+            const res = await Axios.get(endpoints.getPool + "/" + poolId);
+            return res.data;
+        } catch (error) {
+            return null;
         }
     }
 }

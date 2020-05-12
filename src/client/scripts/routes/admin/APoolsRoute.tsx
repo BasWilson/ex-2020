@@ -16,7 +16,7 @@ export default class APoolsRoute extends Component {
     render() {
         return (
             <div class={"content"}>
-                <div className={"login"}>
+                <div className={"container login"}>
                     <h2>Bestaande poules</h2>
                     <div className={"pool-search-results m-t-10"}>
                         {

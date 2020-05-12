@@ -12,6 +12,17 @@ class UsersService {
             return [];
         }
     }
+
+    public GetLocalProfile(): IUserModel | null {
+        // Haal het profiel uit ls
+        const profile = localStorage.getItem("profile");
+
+        if (profile) {
+            return JSON.parse(profile) as IUserModel;
+        }
+
+        return null;
+    }
 }
 
 export default new UsersService();

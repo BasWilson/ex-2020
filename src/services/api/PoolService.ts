@@ -98,13 +98,26 @@ export default class PoolService {
         }
     }
 
-
-    public GetAllPools = async (req: IReq, res: Express.Response) => {
+    public GetPool = async (req: IReq, res: Express.Response) => {
 
         try {
-            // haal alle poules op en verstuur ze
-            const pools: IPoolModel[] = await PoolModel.find({});
-            res.send(pools);
+            // Check of er een id meegegeven is
+            if (req.params.poolId) {
+                const pool: IPoolModel | null = await PoolModel.findOne({poolId: req.params.poolId});
+
+                if (pool) {
+                    res.send(pool);
+                } else{
+                    res.sendStatus(404);
+                }
+            } else {
+
+                // Niks meegegeven, geef gewoon alle pouls terug
+                // haal alle poules op en verstuur ze
+                const pools: IPoolModel[] = await PoolModel.find({});
+                res.send(pools);
+            }
+
         } catch (error) {
             console.log(error);
             res.send([]);
