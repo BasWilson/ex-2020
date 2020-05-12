@@ -2,7 +2,7 @@ import * as Express from "express";
 import * as striptags from "striptags";
 import UserModel from "../../dbModels/UserModel";
 import IUserModel from "../../interfaces/user/IUserModel";
-import { PrivateProfile, GenerateJWT, ComparePassword, DecodeJWT } from "../../helpers/UserHelpers";
+import { PrivateProfile, GenerateJWT, ComparePassword, DecodeJWT, PublicProfile } from "../../helpers/UserHelpers";
 import IReq from "../../interfaces/user/IReq";
 
 export default class UsersService {
@@ -149,4 +149,22 @@ export default class UsersService {
             })
         }
     }
+
+    public GetAllUsers = async (req: IReq, res: Express.Response) => {
+
+        try {
+            // haal alle users op en maak publieke profielen ervan
+            const users: IUserModel[] = await UserModel.find({});
+            const publicUsers = [];
+
+            for (let i = 0; i < users.length; i++) {
+                publicUsers.push(PublicProfile(users[i]));    
+            }
+
+            res.send(publicUsers);
+        } catch (error) {
+            console.log(error);
+            res.send([]);
+        }
+    };
 }

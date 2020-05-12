@@ -2,6 +2,8 @@ import {h, Component } from "preact";
 import TextField from "../components/TextField";
 import AuthenticationService from "../services/AuthenticationService";
 import errors from "../constants/errors";
+import IUserModel from "../../../interfaces/user/IUserModel";
+import { route } from 'preact-router';
 
 export default class LoginRoute extends Component {
 
@@ -17,8 +19,16 @@ export default class LoginRoute extends Component {
             return alert(errors[res.error]);
         }
 
-        console.log(res);
-        
+        localStorage.setItem("profile", res);
+
+        const profile: IUserModel = res;
+
+        // Check if admin
+        if (profile.elevationLevel > 0) {
+            route('/admin');
+        } else {
+            route('/');
+        }
     }
 
     SubmitRegistration = async () => {
@@ -27,6 +37,9 @@ export default class LoginRoute extends Component {
         if (res.hasOwnProperty("error")) {
             return alert(errors[res.error]);
         }
+
+        localStorage.setItem("profile", res);
+        route('/');
     }
 
     ValueChanged = (input: string, val: string) => {

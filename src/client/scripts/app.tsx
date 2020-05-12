@@ -7,6 +7,10 @@ import HomeRoute from "./routes/HomeRoute";
 import LoginRoute from "./routes/LoginRoute";
 import NavigationBar from "./components/NavigationBar";
 import BreadCrumbs from "./components/BreadCrumbs";
+import AdminRoute from "./routes/AdminRoute";
+import APoolCreateRoute from "./routes/admin/APoolCreateRoute";
+import APoolsRoute from "./routes/admin/APoolsRoute";
+import PoolsRoute from "./routes/PoolsRoute";
 
 class App extends Component {
 
@@ -26,6 +30,10 @@ class App extends Component {
                 <Router onChange={this.PageChanged}>
                     <HomeRoute path="/"/>
                     <LoginRoute path="/login"/>
+                    <AdminRoute path="/admin"/>
+                    <APoolCreateRoute path="/admin/pool-create"/>
+                    <APoolsRoute path="/admin/pools"/>
+                    <PoolsRoute path="/pools/:poolId"/>
                 </Router>
             </Fragment>
 

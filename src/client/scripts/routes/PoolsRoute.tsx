@@ -1,6 +1,6 @@
 import {h, Component } from "preact";
 
-export default class HomeRoute extends Component {
+export default class PoolsRoute extends Component {
 
     render() {
         return (

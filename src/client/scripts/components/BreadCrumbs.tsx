@@ -3,24 +3,30 @@
 
 import {h, Component, render, Fragment} from "preact";
 import pages from "../constants/pages";
+import { Link } from "preact-router";
 
 export interface IBreadCrumb {
-    pages: [{name: string, url: string}]
+    pages: [{name: string, url: string, customLogic?: Function}]
     [key:string]: any;
 }
 
 export default class BreadCrumbs extends Component<{currentPage: string}>  {
 
     render() {
+        let breadcrumb : IBreadCrumb = pages["/"];
+        if (this.props.currentPage) {
+            if (pages.hasOwnProperty(this.props.currentPage)) {
+                // @ts-ignore
+                breadcrumb = pages[this.props.currentPage ? this.props.currentPage : "/"];
+            }
+        }
 
-        // @ts-ignore
-        const breadCrumb: IBreadCrumb = pages[this.props.currentPage ? this.props.currentPage : "/"];
         return (
             <div className={"breadcrumbs"}>
                 <span>
                 {
-                    breadCrumb.pages.map((page, index) => {
-                        return <a className={"breadcrumb"} href={page.url}>{index > 0 ? " / " : ""}{page.name}</a>
+                    breadcrumb.pages.map((page, index) => {
+                        return <Link className={"breadcrumb"} href={page.url}>{index > 0 ? " / " : ""}{page.name}</Link>
                     })
                 }
                 </span>

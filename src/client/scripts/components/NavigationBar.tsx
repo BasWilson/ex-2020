@@ -10,6 +10,7 @@ export default class NavigationBar extends Component {
             <nav>
                 <span className={"title"}>EK2020</span>
                 <a href="/login" className={"button"}>Login</a>
+                <a href="/admin" className={"button"}>Admin</a>
             </nav>
         )
     }

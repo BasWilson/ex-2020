@@ -1,6 +1,7 @@
 import * as Express from "express";
 import IController from "../../interfaces/IController";
 import UsersService from "../../services/api/UsersService";
+import LoggedInCheck from "../../middleware/LoggedInCheck";
 
 class UsersController implements IController {
     router: Express.Router;    
@@ -20,6 +21,9 @@ class UsersController implements IController {
 
         // Handeld het inloggen van een user
         this.router.post('/login', this.service.LogIn);
+
+        // Haalt alle users op, checkt ook of gebruiker ingelogd is
+        this.router.get('/', LoggedInCheck(), this.service.GetAllUsers);
     }
 }
 

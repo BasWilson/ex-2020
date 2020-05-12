@@ -57,7 +57,7 @@ export default class WebServer {
 
         api.use("/users", UsersController.router);
 
-        api.use("/pool", PoolsController.router);
+        api.use("/pools", PoolsController.router);
 
         // Voeg de api toe
         this.app.use("/api", api);

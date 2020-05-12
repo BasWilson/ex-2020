@@ -1,9 +1,8 @@
 import * as Express from "express";
 import * as striptags from "striptags";
-import UserModel from "../../dbModels/UserModel";
-import IUserModel from "../../interfaces/user/IUserModel";
-import { PrivateProfile, GenerateJWT, ComparePassword } from "../../helpers/UserHelpers";
 import IReq from "../../interfaces/user/IReq";
+import IPoolModel from "../../interfaces/pool/IPoolModel";
+import PoolModel from "../../dbModels/PoolModel";
 
 export default class PoolService {
     
@@ -16,47 +15,41 @@ export default class PoolService {
 
             // Valideer de input
             // Check if username en password zijn mee gegeven
-            if (!req.body.hasOwnProperty("username") || !req.body.hasOwnProperty("password")) {
+            if (!req.body.hasOwnProperty("name")) {
 
                 return res.send({
-                    error: "noUsernameOrPassword"
+                    error: "noPoolNameSupplied"
                 });
             }
 
             // Data is er. Strip data van harmfull stuff
-            let {username, password} = req.body;
+            let {name, userIds} = req.body;
 
-            // Strip HTML tags uit de username en haal whitespace weg
-            username = striptags(username).trim();
+            // Strip HTML tags uit de naam en haal whitespace weg
+            name = striptags(name).trim();
 
-            // Check lengte van de username
-            if (username.length > 30 || username.length < 3) {
+            // Check lengte van de naam
+            if (name.length > 30 || name.length < 3) {
 
                 return res.send({
                     error: "usernameLengthInvalid"
                 });
             }
 
-            // Creeer de user
-            // Zoals je kan zien vullen we alleen zelf de username en ww in omdat de rest door mongo 
-            // voor ons wordt ingevuld d.m.v. default values.
-            // In de UserModel.ts wordt ook het password voor ons gehasht.
-            const user = <IUserModel>{
-                username: username,
-                password: password
+            // Creeer de poule
+            const pool = <IPoolModel>{
+                name: name,
+                userIds: userIds
             };
 
-            // Sla de user op in de database
-            const savedUser = await UserModel.create(user);
-
-            // Genereer een JsonWebToken voor toekomstige authenticatie
-            req.session.token = GenerateJWT(savedUser);
+            // Sla de poule op in de database
+            const savedPoule = await PoolModel.create(pool);
             
-            // Maak van het opgeslagen profiel een private profile en stuur naar de gebruiker
-            res.send(PrivateProfile(savedUser));
+            // Stuur true terug naar de admin
+            res.send(true);
 
         } catch (error) {
-            console.log("Error tijdens het maken van account", error);
+            console.log("Error tijdens het maken van poule", error);
 
             // Check of het een mongo error is
             if (error.hasOwnProperty("code")) {
@@ -64,7 +57,7 @@ export default class PoolService {
                 // Duplicate key error == username is al ingebruik
                 if (error.code == 11000) {
                     return res.send({
-                        error: "usernameTaken"
+                        error: "poolIdTaken"
                     });
                 }
             }
@@ -83,46 +76,6 @@ export default class PoolService {
 
         try {
 
-            // Valideer de input
-            // Check if username en password zijn mee gegeven
-            if (!req.body.hasOwnProperty("username") || !req.body.hasOwnProperty("password")) {
-
-                return res.send({
-                    error: "noUsernameOrPassword"
-                });
-            }
-
-            // Data is er. Strip data van harmfull stuff
-            let {username, password} = req.body;
-
-            // Strip HTML tags uit de username en haal whitespace weg
-            username = striptags(username).trim();
-
-            // Check lengte van de username
-            if (username.length > 30 || username.length < 3) {
-
-                return res.send({
-                    error: "usernameLengthInvalid"
-                });
-            }
-
-            // Creeer de user
-            // Zoals je kan zien vullen we alleen zelf de username en ww in omdat de rest door mongo 
-            // voor ons wordt ingevuld d.m.v. default values.
-            // In de UserModel.ts wordt ook het password voor ons gehasht.
-            const user = <IUserModel>{
-                username: username,
-                password: password
-            };
-
-            // Sla de user op in de database
-            const savedUser = await UserModel.create(user);
-
-            // Genereer een JsonWebToken voor toekomstige authenticatie
-            req.session.token = GenerateJWT(savedUser);
-            
-            // Maak van het opgeslagen profiel een private profile en stuur naar de gebruiker
-            res.send(PrivateProfile(savedUser));
 
         } catch (error) {
             console.log("Error tijdens het maken van account", error);
@@ -144,5 +97,18 @@ export default class PoolService {
             })
         }
     }
+
+
+    public GetAllPools = async (req: IReq, res: Express.Response) => {
+
+        try {
+            // haal alle poules op en verstuur ze
+            const pools: IPoolModel[] = await PoolModel.find({});
+            res.send(pools);
+        } catch (error) {
+            console.log(error);
+            res.send([]);
+        }
+    };
 
 }
