@@ -8,18 +8,20 @@ export function CalculatePointsPerUser(pool: IPoolModel) {
         const user = pool.votesByUserId[i];
         let points = 0;
 
-        for (let k = 0; k < user.votesInOrderByCountry.length; k++) {
-            const countryVote = user.votesInOrderByCountry[k];
+        if (user.votesInOrderByCountry[0] == pool.topFourCountries[0]) {
+            points += 11;
+        }
 
+        if (user.votesInOrderByCountry[1] == pool.topFourCountries[1]) {
+            points += 7;
+        }
 
-            // Per vote kijken wat die goed heeft.
-            for (let j = 0; j < pool.topFourCountries.length; j++) {
-                const winningCountry = pool.topFourCountries[j];
+        if (user.votesInOrderByCountry[2] == pool.topFourCountries[2]) {
+            points += 5;
+        }
 
-                if (winningCountry == countryVote) {
-                    points += PointsForIndex(j + 1);
-                }
-            }
+        if (user.votesInOrderByCountry[3] == pool.topFourCountries[3]) {
+            points += 3;
         }
 
         // voeg user toe aan result
@@ -34,16 +36,4 @@ export function CalculatePointsPerUser(pool: IPoolModel) {
     usersSortedByScore.sort((a:any, b:any) => a.distance - b.distance);
 
     return usersSortedByScore;
-}
-
-function PointsForIndex(i: number) {
-    // i = de index + 1 van wat je goed hebt. i kan dus 1, 2, 3 of 4 zijn.
-    let points = 2 * i;
-
-    // Kijk of hoogste is gehaald (8), doe dan nog 2 punten extra om op 10 te komen
-    if (i == 4) {
-        points += 2;
-    }
-
-    return points;
 }

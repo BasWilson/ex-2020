@@ -2,10 +2,10 @@ import { h, Component, Fragment } from "preact";
 import IUserModel from "../../../interfaces/user/IUserModel";
 import IPoolModel from "../../../interfaces/pool/IPoolModel";
 import PoolService from "../services/PoolService";
-export default class PoolUsersList extends Component<{profile: IUserModel, pool: IPoolModel, usersInPool: IUserModel[], refreshCallback: Function}> {
+import UserService from "../services/UserService";
+export default class PoolUsersList extends Component<{profile: IUserModel, pool: IPoolModel, usersInPool: IUserModel[], refreshCallback: Function, score: { userId: string; points: number; }[]}> {
 
     RemoveUserFromPool = async (userId: string) => {
-        // PoolService.UpdatePool(this.state.pool.poolId, props.userId, )
 
         // Pak de array met users
         const pool: IPoolModel = this.props.pool!;
@@ -26,11 +26,21 @@ export default class PoolUsersList extends Component<{profile: IUserModel, pool:
     };
 
     DeleteButton = (props: {elevationLevel: number, userId: string}) => {
-        if (props.elevationLevel > 0) {
-            return <span className={"red"} onClick={() => {this.RemoveUserFromPool(props.userId)}}>X</span>
+        
+        // Haal het profiel uit ls
+        const profile: IUserModel | null = UserService.GetLocalProfile();
+
+        if (profile) {
+            
+            if (props.elevationLevel > 0 && props.userId != profile.userId) {
+                return <span className={"red"} onClick={() => {this.RemoveUserFromPool(props.userId)}}>X</span>
+            }
+    
+            return null;
         }
 
         return null;
+
     };
 
     render() {
@@ -40,10 +50,11 @@ export default class PoolUsersList extends Component<{profile: IUserModel, pool:
                 <div className={"pool-users m-t-10"}>
                     {
                         this.props.usersInPool.map((user: IUserModel) => {
+                            const score = this.props.score.find(score => score.userId == user.userId);
                             return (
                                 <div onClick={() => { }}>
                                     <span>{user.username}</span>
-                                    <span>0 punten</span>
+                                    <span>{score ? score.points + " punten" : "Geen voorspelling"}</span>
                                     <this.DeleteButton userId={user.userId} elevationLevel={this.props.profile.elevationLevel} />
                                 </div>
                             )

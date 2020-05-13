@@ -2,6 +2,7 @@ import { h, Component, Fragment } from "preact";
 import IPoolModel from "../../../interfaces/pool/IPoolModel";
 import PoolService from "../services/PoolService";
 import countries from "../constants/countries";
+import UserService from "../services/UserService";
 
 export default class PoolAdminControls extends Component<{ pool: IPoolModel, finishedCallback: Function }> {
 
@@ -10,6 +11,10 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
     }
 
     render() {
+                
+        if (!UserService.IsAdmin()) {
+            return null;
+        }
 
         return (
             <Fragment>
@@ -58,7 +63,7 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
                                             if (!pool) return;
 
                                             // Stel de score in
-                                            pool.topFourCountries = copyOfCountries.reverse();
+                                            pool.topFourCountries = copyOfCountries;
 
                                             console.log(pool);
 

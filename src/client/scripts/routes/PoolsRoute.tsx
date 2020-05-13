@@ -18,7 +18,7 @@ export default class PoolsRoute extends Component {
         finalized: false
     }
 
-    componentWillMount = async () => {
+    componentDidMount = async () => {
         await this.RefreshPoolAndUsers();
     }
 
@@ -84,15 +84,16 @@ export default class PoolsRoute extends Component {
                     const score = CalculatePointsPerUser(this.state.pool!);
                     return (
                         <div className={"content container container--h"}>
-                            <PoolUsersList profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
+                            <PoolUsersList score={score} profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
                             <PoolBracket score={score} users={this.state.usersInPool} />
                         </div>
                     )
                 } else {
+                    const score = CalculatePointsPerUser(this.state.pool!);
                     return (
                         <div className={"content container container--h"}>
                             <PoolAdminControls pool={this.state.pool!} finishedCallback={this.RefreshPoolAndUsers} />
-                            <PoolUsersList profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
+                            <PoolUsersList score={score} profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
                         </div>
                     )
                 }

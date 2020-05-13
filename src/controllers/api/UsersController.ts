@@ -22,6 +22,9 @@ class UsersController implements IController {
         // Handeld het inloggen van een user
         this.router.post('/login', this.service.LogIn);
 
+        // Handeld het uitloggen van een user
+        this.router.post('/logout', LoggedInCheck(), this.service.Logout);
+
         // Haalt alle users op, checkt ook of gebruiker ingelogd is
         this.router.get('/:userId?', LoggedInCheck(), this.service.GetUser);
     }

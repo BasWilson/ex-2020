@@ -24,6 +24,19 @@ class UsersService {
         return null;
     }
 
+    public IsAdmin(): boolean {
+        // Haal het profiel uit ls
+        const profile = localStorage.getItem("profile");
+
+        if (profile) {
+            const pf = JSON.parse(profile) as IUserModel;
+            if (pf.elevationLevel > 0) return true;
+        }
+
+        return false;
+    }
+
+
     public GetUserById = async (userId: string):Promise<IUserModel | null> => {
         try {
             const res = await Axios.get(endpoints.users + "/" + userId);

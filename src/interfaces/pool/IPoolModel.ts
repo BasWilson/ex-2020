@@ -11,5 +11,6 @@ export default interface IPoolModel extends Document {
             votesInOrderByCountry: string[];
         }
     ],
-    topFourCountries: string[]
+    topFourCountries: string[],
+    lastMomentToVote: Number
 }

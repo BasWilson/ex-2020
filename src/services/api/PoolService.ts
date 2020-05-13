@@ -188,6 +188,15 @@ export default class PoolService {
                 return res.send({error: "invaldPoolId"});
             }
 
+            // Check of er nog gestemd mag worden
+            if (oldPool.lastMomentToVote) {
+
+                // Kijk of huidige timestamp groter is dan de uiterlijke timestamp
+                if (Date.now() > oldPool.lastMomentToVote) {
+                    return res.send({error: "noTimeLeftToVote"})
+                }
+            }
+
             // Kijk of niet al gekozen
             if (oldPool.votesByUserId.find(vote => vote.userId == user.userId)) {
                 return res.send({error: "alreadyPicked"});

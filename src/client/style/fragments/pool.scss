@@ -22,7 +22,7 @@
     width: 100%;
     
     div {
-        width: 200px;
+        width: 100%;
         background-color: rgba(255, 255, 255, 0.795);
         text-align: left;
         padding: 10px;
@@ -55,9 +55,9 @@
 
     &__bracket {
         width: 200px;
-        padding: 40px;
+        padding: 20px;
         background: white;
-        margin-right: 40px;
+        text-align: left;
 
         &:last-of-type {
             margin-right: 0;

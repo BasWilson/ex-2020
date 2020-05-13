@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon",
-    "build:all": "rimraf ./build && tsc && parcel build src/client/views/*.html --out-dir build/client --no-source-maps",
+    "build:all": "rimraf ./build && tsc && parcel build src/client/views/*.html --out-dir build/src/client/dev-dist --no-source-maps",
     "start": "node ./build/src/index.js"
   },
   "repository": {

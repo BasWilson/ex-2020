@@ -182,4 +182,16 @@ export default class UsersService {
             res.send([]);
         }
     };
+
+    public Logout = async (req: IReq, res: Express.Response) => {
+
+        try {
+
+            res.clearCookie("token");
+            res.send(true);
+        } catch (error) {
+            console.log(error);
+            res.send([]);
+        }
+    };
 }
