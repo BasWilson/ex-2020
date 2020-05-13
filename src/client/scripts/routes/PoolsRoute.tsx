@@ -79,7 +79,7 @@ export default class PoolsRoute extends Component {
             if (!this.state.pickedCountries) {
             
                 return (
-                    <div className={"content container container--h"}>
+                    <div className={"content container container--h"} style={"padding-top: 0;"}>
                         <PoolCountryPicker pool={this.state.pool!} finishedCallback={() => {this.setState({pickedCountries: true}); this.RefreshPoolAndUsers();}} />
                     </div>
                 )
@@ -88,7 +88,7 @@ export default class PoolsRoute extends Component {
                 if (this.state.finalized) {
                     const score = CalculatePointsPerUser(this.state.pool!);
                     return (
-                        <div className={"content container container--h"}>
+                        <div className={"content container container--h"} style={"padding-top: 0;"}>
                             <PoolUsersList score={score} profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
                             <PoolBracket score={score} users={this.state.usersInPool} />
                         </div>
@@ -96,8 +96,8 @@ export default class PoolsRoute extends Component {
                 } else {
                     const score = CalculatePointsPerUser(this.state.pool!);
                     return (
-                        <div className={"content container container--h"}>
-                            <PoolAdminControls pool={this.state.pool!} finishedCallback={this.RefreshPoolAndUsers} />
+                        <div className={"content container container--h"} style={"padding-top: 0;"}>
+                            <PoolAdminControls pool={this.state.pool!} finishedCallback={this.RefreshPoolAndUsers} finalized={this.state.finalized} />
                             <PoolUsersList score={score} profile={profile} pool={this.state.pool!} refreshCallback={this.RefreshPoolAndUsers} usersInPool={this.state.usersInPool} />
                         </div>
                     )

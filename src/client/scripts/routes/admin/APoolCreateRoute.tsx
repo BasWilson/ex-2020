@@ -79,7 +79,7 @@ export default class APoolCreateRoute extends Component {
                     
                     <span className={"m-t-20"}>Wie wil je aan de poule toevoegen?</span>
                     <TextField customClasses={"m-t-10"} type={"text"} placeholder={"Zoek op naam"} onEnter={this.SubmitPoolCreation} valueChanged={this.FilterSearch} />
-                    <div className={"pool-search-results"}>
+                    <div className={"pool-search-results m-t-10"}>
                         {
                             this.state.userSearchResults.map((user: IUserModel) => {
 

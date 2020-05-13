@@ -11,10 +11,17 @@ export default class PoolCountryPicker extends Component<{ pool: IPoolModel, fin
     }
 
     render() {
+        let date;
+
+        if (this.props.pool.lastMomentToVote != -1) {
+            date = new Date(this.props.pool.lastMomentToVote);
+        }
+
         return (
             <Fragment>
                 <div className={"container bg-primary m-r-20"}>
                     <h2>Kies jouw top 4!</h2>
+                    <p className={"m-t-10"}>{date ? `${date.toLocaleTimeString()}, ${date.toLocaleDateString()}` : "Geen eind tijd ingesteld"}</p>
                     <div className={"pool-users m-t-10"}>
                         {
                             // Laat de gekozen landen zien

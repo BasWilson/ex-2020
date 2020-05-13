@@ -4,7 +4,7 @@ import PoolService from "../services/PoolService";
 import countries from "../constants/countries";
 import UserService from "../services/UserService";
 
-export default class PoolAdminControls extends Component<{ pool: IPoolModel, finishedCallback: Function }> {
+export default class PoolAdminControls extends Component<{ pool: IPoolModel, finishedCallback: Function, finalized: boolean }> {
 
     state = {
         countriesPicked: [],
@@ -18,11 +18,11 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
 
         let date;
 
-        console.log(this.props.pool);
-        
-        if (this.props.pool.lastMomentToVote) {
+        if (this.props.pool.lastMomentToVote != -1) {
             date = new Date(this.props.pool.lastMomentToVote);
         }
+
+        if (this.props.finalized) return null;
 
         return (
             <Fragment>
@@ -33,6 +33,7 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
                         <input className={"m-t-10"} style={"color: black;"} type="datetime-local" placeholder="mm-dd-yyyy" onChange={async (e) => {
 
                             // Pak de ms timestamp
+                            // @ts-ignore
                             const newTime = e.srcElement.valueAsNumber;
 
                             // Sommige browser zijn niet blij hiermee

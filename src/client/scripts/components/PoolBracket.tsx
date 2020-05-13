@@ -17,9 +17,9 @@ export default class PoolBracket extends Component<{score: { userId: string; poi
 
                             return (
                                 <div className={"pool-brackets__layer"}>
-                                    <div className={"pool-brackets__bracket"} style={`width: ${(120 * index) == 0 ? 80 : 120 * index}px`}>
-                                        <h3>{user.username}</h3>
-                                        <span>{score.points}</span>
+                                    <div className={"pool-brackets__bracket"} style={`width: ${index == 0 ? 120 : 150 * index}px`}>
+                                        <h2 className={index == 0 ? "rainbow" : ""}>{user.username}</h2>
+                                        <span>{score.points} {score.points == 1 ? "punt" : "punten"}</span>
                                     </div>
                                 </div>
                             )

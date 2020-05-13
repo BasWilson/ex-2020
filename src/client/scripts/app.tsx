@@ -27,6 +27,7 @@ class App extends Component {
         return (
             <Fragment>
                 <NavigationBar />
+                <div className={"overlay"}></div>
                 <BreadCrumbs currentPage={this.state.currentPage} />
                 <Router onChange={this.PageChanged}>
                     <HomeRoute path="/"/>
