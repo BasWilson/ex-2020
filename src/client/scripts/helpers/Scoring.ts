@@ -43,7 +43,5 @@ export function CalculatePointsPerUser(pool: IPoolModel) {
     }
 
     // Sorteer van hoog naar laag
-    usersSortedByScore.sort((a:any, b:any) => a.distance - b.distance);
-
-    return usersSortedByScore;
+    return usersSortedByScore.sort((a:any, b:any) => a.points - b.points).reverse();
 }
