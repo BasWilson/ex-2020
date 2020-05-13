@@ -107,6 +107,14 @@ export default class UsersService {
                 });
             }
 
+            // Check lengte van de password
+            if (password.length < 4) {
+
+                return res.send({
+                    error: "passwordLengthInvalid"
+                });
+            }
+
             // Zoek de user
             const user = <IUserModel>{
                 username: username
