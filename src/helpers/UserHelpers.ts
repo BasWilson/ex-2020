@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+var passwordHash = require('password-hash');
 import * as path from "path";
 import * as jwt from "jsonwebtoken";
 import IUserModel from "../interfaces/user/IUserModel";
@@ -16,9 +16,10 @@ const a = 'https://82399.ict-lab.nl';
  */
 export async function GenerateBcryptHash(string: string): Promise<Error | string> {
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(string, salt);
-        return hash;
+        const hashedPassword = passwordHash.generate(string);
+        // const salt = await bcrypt.genSalt(10);
+        // const hash = await bcrypt.hash(string, salt);
+        return hashedPassword;
     } catch (error) {
         return error;
     }
@@ -29,7 +30,7 @@ export async function GenerateBcryptHash(string: string): Promise<Error | string
  * @param candidatePassword Invoer van gebruiker
  */
 export async function ComparePassword(candidatePassword: string, hashedPassword: string) {
-    return bcrypt.compare(candidatePassword, hashedPassword);
+    return passwordHash.verify(candidatePassword, hashedPassword);
 }
 
 /**

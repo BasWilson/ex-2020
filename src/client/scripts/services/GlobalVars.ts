@@ -7,11 +7,13 @@ class GlobalVars {
     }
 
     public Add(name: string, value: any) {
+        //@ts-ignore
         this.vars[name] = value;
     }
 
     public Get(name: string) {
         if (this.vars.hasOwnProperty(name)) {
+            //@ts-ignore
             return this.vars[name];
         }
         return null;
