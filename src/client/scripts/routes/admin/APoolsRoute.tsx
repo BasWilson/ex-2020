@@ -14,6 +14,8 @@ export default class APoolsRoute extends Component {
         // Check of ingelogd
         if (!UserService.GetLocalProfile()) return route("/login");
         
+        if (!UserService.IsAdmin()) return route("/");
+
         this.setState({pools: await PoolService.GetAllPools()});
     }
 

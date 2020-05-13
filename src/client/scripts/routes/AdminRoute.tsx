@@ -7,6 +7,8 @@ export default class AdminRoute extends Component {
     componentDidMount = () => {
         // Check of ingelogd
         if (!UserService.GetLocalProfile()) return route("/login");
+
+        if (!UserService.IsAdmin()) return route("/");
     }
 
     render() {

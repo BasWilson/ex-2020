@@ -20,6 +20,8 @@ export default class APoolCreateRoute extends Component {
         // Check of ingelogd
         if (!UserService.GetLocalProfile()) return route("/login");
 
+        if (!UserService.IsAdmin()) return route("/");
+
         this.setState({users: await UserService.GetAllUsers()});
     }
 

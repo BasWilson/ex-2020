@@ -19,6 +19,13 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
         return (
             <Fragment>
                 <div className={"container bg-primary m-r-20"}>
+                    <h2>Laatste stem moment</h2>
+                    <div className={"pool-users m-t-10"}>
+                        <input style={"color: black;"} type="datetime-local" placeholder="mm-dd-yyyy" onChange={(val) => {console.log(val.srcElement.valueAsNumber)}} />
+                    </div>
+                </div>
+
+                <div className={"container bg-primary m-r-20"}>
                     <h2>Wat is de eind score?</h2>
                     <div className={"pool-users m-t-10"}>
                         {

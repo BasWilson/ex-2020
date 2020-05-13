@@ -27,9 +27,16 @@ class AuthenticationService {
 
                 // redirect terug naar login
                 route("/login")
-            }
+            } 
             return authRes.data;
         } catch (error) {
+
+            // Verwijder locale user acc
+            localStorage.clear();
+
+            // redirect terug naar login
+            route("/login")
+
             return null;
         }
     };
