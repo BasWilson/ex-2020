@@ -6,5 +6,9 @@
     &--h {
         flex-direction: row;
     }
+
+    &--no-pad {
+        padding-top: 0;
+    }
 }
 

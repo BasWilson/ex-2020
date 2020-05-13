@@ -1,18 +1,25 @@
 import { h, Component, Fragment } from "preact";
-import { Link } from "preact-router";
+import { Link, route } from "preact-router";
+import UserService from "../services/UserService";
 
 export default class AdminRoute extends Component {
+
+    componentDidMount = () => {
+        // Check of ingelogd
+        if (!UserService.GetLocalProfile()) return route("/login");
+    }
 
     render() {
         return (
             <div class={"content"}>
-                <p>Wat wilt u doen?</p>
-                <ul>
-                    <li><Link href="/admin/pool-create">Maak een nieuwe poule</Link></li>
-                    <li><Link href="/admin/pools">Bekijk alle poules</Link></li>
-                </ul>
+            <div className={"container login bg-primary"}>
+                <h2>Admin panel</h2>
+                <div className={"pool-search-results m-t-10"}>
+                    <Link href="/admin/pool-create">Maak een nieuwe poule<br /><br/></Link>
+                    <Link href="/admin/pools">Bekijk alle poules</Link>
+                </div>
             </div>
-
+        </div>
         )
     }
 }

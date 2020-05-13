@@ -17,6 +17,9 @@ export default class APoolCreateRoute extends Component {
     }
 
     componentDidMount = async () => {
+        // Check of ingelogd
+        if (!UserService.GetLocalProfile()) return route("/login");
+
         this.setState({users: await UserService.GetAllUsers()});
     }
 

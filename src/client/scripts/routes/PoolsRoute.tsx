@@ -8,6 +8,7 @@ import PoolAdminControls from "../components/PoolAdminControls";
 import GlobalCallbacks from "../services/GlobalCallbacks";
 import PoolBracket from "../components/PoolBracket";
 import { CalculatePointsPerUser } from "../helpers/Scoring";
+import { route } from "preact-router";
 
 export default class PoolsRoute extends Component {
 
@@ -19,6 +20,10 @@ export default class PoolsRoute extends Component {
     }
 
     componentDidMount = async () => {
+
+        // Check of ingelogd
+        if (!UserService.GetLocalProfile()) return route("/login");
+        
         await this.RefreshPoolAndUsers();
     }
 
@@ -75,7 +80,7 @@ export default class PoolsRoute extends Component {
             
                 return (
                     <div className={"content container container--h"}>
-                        <PoolCountryPicker pool={this.state.pool!} finishedCallback={() => {this.setState({pickedCountries: true})}} />
+                        <PoolCountryPicker pool={this.state.pool!} finishedCallback={() => {this.setState({pickedCountries: true}); this.RefreshPoolAndUsers();}} />
                     </div>
                 )
             } else {
