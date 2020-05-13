@@ -41,6 +41,8 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
                             }
 
                             const oldPool: IPoolModel = this.props.pool!;
+
+                            // haal de nieuwste poule op
                             const pool = await PoolService.GetPool(oldPool.poolId);
 
                             if (!pool) return;

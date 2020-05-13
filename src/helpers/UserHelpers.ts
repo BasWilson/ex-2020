@@ -4,6 +4,7 @@ import * as jwt from "jsonwebtoken";
 import IUserModel from "../interfaces/user/IUserModel";
 import { readFileSync } from "fs";
 
+// Keys om de token mee te signen. Deze zijn 512bit
 const privateKEY = readFileSync(path.resolve(__dirname + '../../../keys/private.key'), 'utf8');
 const publicKEY = readFileSync(path.resolve(__dirname + '../../../keys/public.key'), 'utf8');
 const i = 'EK2020';
@@ -58,9 +59,8 @@ export function PrivateProfile(user: IUserModel) {
     }
 }
 
+// Creeer en sign JWT aan de hand van de user's model
 export function GenerateJWT(user: IUserModel) {
-
-    console.log(__dirname);
 
     const payload = {
         username: user.username,
@@ -82,6 +82,10 @@ export function GenerateJWT(user: IUserModel) {
     return token;
 }
 
+/**
+ * Verifieer of de token valide is.
+ * @param token JWT
+ */
 export function VerifyJWT(token: string) {
 
     const verifyOptions = <jwt.VerifyOptions>{
@@ -92,11 +96,13 @@ export function VerifyJWT(token: string) {
         algorithm: ["RS256"]
     };
 
-    var legit = jwt.verify(token, publicKEY, verifyOptions);
-
-    console.log("\nJWT verification result: " + JSON.stringify(legit));
+    const legit = jwt.verify(token, publicKEY, verifyOptions);
 }
 
+/**
+ * Decode de data uit een token.
+ * @param token JWT
+ */
 export function DecodeJWT(token: string) {
     return jwt.decode(token, {complete: true});
 }

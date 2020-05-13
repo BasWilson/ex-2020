@@ -140,8 +140,6 @@ export default class UsersService {
                 });
             }
 
-            console.log(DecodeJWT(req.cookies.token));
-
             // Genereer een JsonWebToken voor toekomstige authenticatie
             res.cookie("token", GenerateJWT(savedUser));
 
@@ -158,6 +156,9 @@ export default class UsersService {
         }
     }
 
+    /**
+     * Haalt een enkele user op of allemaal
+     */
     public GetUser = async (req: IReq, res: Express.Response) => {
 
         try {
@@ -191,15 +192,22 @@ export default class UsersService {
         }
     };
 
+    /**
+     * Verwijdert de cookie
+     */
     public Logout = async (req: IReq, res: Express.Response) => {
 
         try {
-
+            // Verwijder de jwt
             res.clearCookie("token");
+
+            // laat client weten dat het goed is
             res.send(true);
         } catch (error) {
             console.log(error);
-            res.send([]);
+
+            // Stuur false terug
+            res.send(false);
         }
     };
 }

@@ -15,6 +15,7 @@ interface SessionCookie extends SessionCookieData {
     serialize(name: string, value: string): string;
 }
 
+// Een extendsion van de Express request interface met een token erbij
 export default interface IReq extends Express.Request {
     session: {
         id: string;
@@ -24,6 +25,8 @@ export default interface IReq extends Express.Request {
         save(callback: (err: any) => void): void;
         touch(): void;
         cookie: SessionCookie;
+
+        // Our extension
         token: string;
     }
 }

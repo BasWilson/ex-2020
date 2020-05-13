@@ -15,6 +15,7 @@ class WebsiteController implements IController {
     setup = () => {
         this.service = new WebsiteService();
 
+        // Wildcard op alle links naar de html file
         this.router.get('*', this.service.SPA);
     }
 }

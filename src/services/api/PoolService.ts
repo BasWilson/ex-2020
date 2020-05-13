@@ -12,7 +12,7 @@ import countries from "../../client/scripts/constants/countries";
 export default class PoolService {
     
     /**
-     * Valideert input en creeert een gebruiker.
+     * Valideert input en creeert een nieuwe Poule
      */
     public Create = async (req: IReq, res: Express.Response) => {
 
@@ -85,11 +85,19 @@ export default class PoolService {
     }
 
     /**
-     * Valideert input en creeert een gebruiker.
+     *  Update het gehele poule object in de DB, alleen de admin kan deze functie gebruiken.
+     *  Pas goed op in de client wanneer deze gebruikt wordt.
      */
     public Update = async (req: IReq, res: Express.Response) => {
 
         try {
+
+            // Check of de poule er is
+            if (!req.body.hasOwnProperty("pool")) {
+                return res.send({
+                    error: "unknownError"
+                })
+            }
 
             // Check of het een pool object is en zorg dan dat ook alleen de data voor een pool achterblijft
             const pool: IPoolModel | null = IsAPool(req.body.pool);
@@ -115,6 +123,9 @@ export default class PoolService {
         }
     }
 
+    /**
+     * Haalt een of alle poules op
+     */
     public GetPool = async (req: IReq, res: Express.Response) => {
 
         try {
@@ -160,7 +171,7 @@ export default class PoolService {
     };
 
     /**
-     * Valideert input en creeert een gebruiker.
+     * Valideert input en slaat de gekozen landen op
      */
     public PickCountries = async (req: IReq, res: Express.Response) => {
 
@@ -199,7 +210,7 @@ export default class PoolService {
             }
 
             // Check of er nog gestemd mag worden
-            if (oldPool.lastMomentToVote) {
+            if (oldPool.lastMomentToVote != -1) {
 
                 // Kijk of huidige timestamp groter is dan de uiterlijke timestamp
                 if (Date.now() > oldPool.lastMomentToVote) {

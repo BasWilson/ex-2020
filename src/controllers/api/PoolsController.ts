@@ -26,7 +26,7 @@ class PoolController implements IController {
         // Update een pool
         this.router.put('/', AdminCheck(), this.service.Update);
 
-        // Update een pool
+        // Stel de gekozen landen in van een user
         this.router.put('/pick-countries', LoggedInCheck(), this.service.PickCountries);
     }
 }

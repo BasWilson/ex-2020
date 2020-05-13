@@ -1,5 +1,6 @@
 import IPoolModel from "../interfaces/pool/IPoolModel";
 
+/** Valideert een Poule en returned een object terug met alleen wat er nodig is */
 export function IsAPool(pool: any):IPoolModel | null {
     if (!pool.hasOwnProperty("poolId") || 
     !pool.hasOwnProperty("name") || 

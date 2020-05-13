@@ -22,7 +22,7 @@ export default class NavigationBar extends Component {
                     <nav>
                         <span className={"title"}>EK2020</span>
                         <div>
-                            <a href="/pools" className={"button"}>Pools</a>
+                            <a href="/pools" className={"button"}>Pouls</a>
                             <a href="/admin" className={"button"}>Admin</a>
                             <a onClick={AuthenticationService.Logout} className={"button"}>Log uit</a>
                         </div>
@@ -35,7 +35,7 @@ export default class NavigationBar extends Component {
                     <nav>
                         <span className={"title"}>EK2020</span>
                         <div>
-                            <a href="/pools" className={"button"}>Pools</a>
+                            <a href="/pools" className={"button"}>Pouls</a>
                             <a onClick={AuthenticationService.Logout} className={"button"}>Log uit</a>
                         </div>
                     </nav>
