@@ -16,12 +16,42 @@ export default class PoolAdminControls extends Component<{ pool: IPoolModel, fin
             return null;
         }
 
+        let date;
+
+        console.log(this.props.pool);
+        
+        if (this.props.pool.lastMomentToVote) {
+            date = new Date(this.props.pool.lastMomentToVote);
+        }
+
         return (
             <Fragment>
                 <div className={"container bg-primary m-r-20"}>
                     <h2>Laatste stem moment</h2>
                     <div className={"pool-users m-t-10"}>
-                        <input style={"color: black;"} type="datetime-local" placeholder="mm-dd-yyyy" onChange={(val) => {console.log(val.srcElement.valueAsNumber)}} />
+                        <p>{date ? `${date.toLocaleTimeString()}, ${date.toLocaleDateString()}` : "Geen tijd ingesteld"}</p>
+                        <input className={"m-t-10"} style={"color: black;"} type="datetime-local" placeholder="mm-dd-yyyy" onChange={async (e) => {
+
+                            // Pak de ms timestamp
+                            const newTime = e.srcElement.valueAsNumber;
+
+                            // Sommige browser zijn niet blij hiermee
+                            if (!newTime || newTime == NaN) {
+                                return alert("Dit kan niet in Safari of IE, gebruik Chrome of iets anders.");
+                            }
+
+                            const oldPool: IPoolModel = this.props.pool!;
+                            const pool = await PoolService.GetPool(oldPool.poolId);
+
+                            if (!pool) return;
+
+                            // Stel het laatste stem momment in
+                            pool.lastMomentToVote = newTime;
+
+                            // Vraag om te updaten
+                            await PoolService.UpdatePool(pool);
+
+                        }} />
                     </div>
                 </div>
 

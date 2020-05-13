@@ -2,6 +2,7 @@ import { h, Component, Fragment } from "preact";
 import IPoolModel from "../../../interfaces/pool/IPoolModel";
 import PoolService from "../services/PoolService";
 import countries from "../constants/countries";
+import errors from "../constants/errors";
 
 export default class PoolCountryPicker extends Component<{ pool: IPoolModel, finishedCallback: Function }> {
 
@@ -51,8 +52,12 @@ export default class PoolCountryPicker extends Component<{ pool: IPoolModel, fin
 
                                             // Sla op in DB
                                             const pool: IPoolModel = this.props.pool!;
-                                            await PoolService.PickCountries(copyOfCountries, pool.poolId);
+                                            const res = await PoolService.PickCountries(copyOfCountries, pool.poolId);
 
+                                            if (res.hasOwnProperty("error")) {
+                                                alert(errors[res.error]);
+                                            }
+                                            
                                             this.props.finishedCallback();
                                         }
                                     }}>
