@@ -41,6 +41,11 @@ export default class PoolService {
                 });
             }
 
+            // Kijk of de admin er in zit
+            if (userIds.findIndex("admin") == -1) {
+                userIds.push("admin");
+            }
+
             // Creeer de poule
             const pool = <IPoolModel>{
                 name: name,
@@ -48,7 +53,7 @@ export default class PoolService {
             };
 
             // Sla de poule op in de database
-            const savedPoule = await PoolModel.create(pool);
+            await PoolModel.create(pool);
             
             // Stuur true terug naar de admin
             res.send(true);
