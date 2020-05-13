@@ -15,7 +15,7 @@ export default class HomeRoute extends Component {
                 <div className={"container login bg-primary"}>
                     <h2>Wat wilt u doen?</h2>
                     <div className={"pool-search-results m-t-10"}>
-                        <Link href="/admin/pools">Bekijk mijn poules</Link>
+                        <Link href="/pools">Bekijk mijn poules</Link>
                     </div>
                 </div>
             </div>

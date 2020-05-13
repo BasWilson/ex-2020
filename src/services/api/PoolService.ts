@@ -41,9 +41,14 @@ export default class PoolService {
                 });
             }
 
+            // Haal account op uit token
+            const decodedJwt: any = DecodeJWT(req.cookies.token);
+            if (!decodedJwt) return res.sendStatus(403);
+            const user: IUserModel = decodedJwt.payload;
+
             // Kijk of de admin er in zit
-            if (userIds.findIndex("admin") == -1) {
-                userIds.push("admin");
+            if (!userIds.find((userId: string) => userId == user.userId)) {
+                userIds.push(user.userId);
             }
 
             // Creeer de poule
